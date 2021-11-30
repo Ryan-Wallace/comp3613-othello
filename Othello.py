@@ -1,10 +1,10 @@
 # Logan VanOostrum, Ryan Wallace, Ben McNutt
-empty = '*'
+empty = '⋅'
 black = 'B'
 white = 'W'
-border = '='
+border = '□'
 
-class OthhelloGame:
+class OthelloGame:
 	gameBoard = [empty] * 100
 	blackPieces = 30
 	whitePieces = 30
@@ -13,27 +13,34 @@ class OthhelloGame:
 		#init method
 		
 		#set border pieces to "border"
-
+		for i in range(100):
+			if i < 10 or i > 89 or i % 10 == 0 or i % 10 == 9:
+				self.gameBoard[i] = border
 		#set 44 and 55 to "white"
+		self.gameBoard[44] = white
+		self.gameBoard[55] = white
 
 		#set 54 and 45 to "black"
+		self.gameBoard[54] = black
+		self.gameBoard[45] = black
+
 
 # print game board
 def show_board(board):
 	for i in range(10):
 		for j in range(10):
-			print(board.gameBoard[(i * 10) + j], end='')
+			print(board.gameBoard[(i * 10) + j] + ' ', end='')
 		print('')
-
+	
 # find all possible moves
 def find_moves(colour, board):
 	moves = []
 	adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 
-	if colour == 'B':
-		opponent = 'W'
+	if colour == black:
+		opponent = white
 	else:
-		opponent = 'B'
+		opponent = black
 	
 	for i in range(8):
 		for j in range(8):
@@ -53,8 +60,11 @@ def find_moves(colour, board):
 							next += pos
 					
 						# make sure loop didnt reach the border
-						if board.gameBoard[next + pos] == '*':
+						if board.gameBoard[next + pos] == empty:
 							if (next + pos) not in moves:
 								moves += [next + pos]
 	
 	return moves
+
+game = OthelloGame()
+show_board(game)
