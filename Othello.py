@@ -4,7 +4,7 @@ black = 'B'
 white = 'W'
 border = '='
 
-class OthhelloGame:
+class OthelloGame:
 	gameBoard = [empty] * 100
 	blackPieces = 30
 	whitePieces = 30
@@ -17,6 +17,8 @@ class OthhelloGame:
 		#set 44 and 55 to "white"
 
 		#set 54 and 45 to "black"
+
+		return
 
 # print game board
 def show_board(board):
@@ -58,3 +60,16 @@ def find_moves(colour, board):
 								moves += [next + pos]
 	
 	return moves
+
+
+
+
+
+
+
+
+
+# main program
+def main():
+	game_main = OthelloGame()
+	show_board(game_main)
