@@ -47,6 +47,7 @@ def find_moves(colour, board):
 					
 						# make sure loop didnt reach the border
 						if board.gameBoard[next + pos] == '*':
-							moves += [next + pos]
+							if (next + pos) not in moves:
+								moves += [next + pos]
 	
 	return moves
