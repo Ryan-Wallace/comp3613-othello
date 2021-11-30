@@ -25,6 +25,8 @@ class OthelloGame:
 		self.gameBoard[45] = black
 
 
+		return
+
 # print game board
 def show_board(board):
 	for i in range(10):
@@ -66,5 +68,14 @@ def find_moves(colour, board):
 	
 	return moves
 
-game = OthelloGame()
-show_board(game)
+
+
+
+
+
+
+
+# main program
+def main():
+	game_main = OthelloGame()
+	show_board(game_main)
