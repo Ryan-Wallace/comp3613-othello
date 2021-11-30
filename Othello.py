@@ -1,3 +1,4 @@
+# Logan VanOostrum, Ryan Wallace, Ben McNutt
 
 class OthhelloGame:
 	empty = '-'
@@ -10,13 +11,8 @@ class OthhelloGame:
 
 	def gameBoard():
 		board = [[]]*10
-		print(board)n
+		print(board)
 
 
 def setPiece(board, x, y, piece):
 	board[x][y] = piece
-
-
-
-
- 
