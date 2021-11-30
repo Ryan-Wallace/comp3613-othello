@@ -1,19 +1,19 @@
 # Logan VanOostrum, Ryan Wallace, Ben McNutt
+empty = '*'
+black = 'B'
+white = 'W'
+border = '='
 
 class OthhelloGame:
-	empty = '-'
-	black = 'o'
-	white = 'x'
-	border = '='
+	gameBoard = [empty] * 100
+	blackPieces = 30
+	whitePieces = 30
 
 	def __init__(self):
 		#init method
-		self.gameBoard  
+		
+		#set border pieces to "border"
 
-	def gameBoard():
-		board = [[]]*10
-		print(board)
+		#set 44 and 55 to "white"
 
-
-def setPiece(board, x, y, piece):
-	board[x][y] = piece
+		#set 54 and 45 to "black"
