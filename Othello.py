@@ -18,6 +18,13 @@ class OthhelloGame:
 
 		#set 54 and 45 to "black"
 
+# print game board
+def show_board(board):
+	for i in range(10):
+		for j in range(10):
+			print(board.gameBoard[(i * 10) + j], end='')
+		print('')
+
 # find all possible moves
 def find_moves(colour, board):
 	moves = []
