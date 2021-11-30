@@ -7,6 +7,7 @@ class OthhelloGame:
 	border = '='
 
 	def __init__(self):
+		#init method
 		self.gameBoard  
 
 	def gameBoard():
