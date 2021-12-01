@@ -5,29 +5,6 @@ white = 'W'
 border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 
-class OthelloGame:
-	gameBoard = [empty] * 100
-	blackPieces = 30
-	whitePieces = 30
-
-	def __init__(self):
-		#init method
-		
-		#set border pieces to "border"
-		for i in range(100):
-			if i < 10 or i > 89 or i % 10 == 0 or i % 10 == 9:
-				self.gameBoard[i] = border
-		#set 44 and 55 to "white"
-		self.gameBoard[44] = white
-		self.gameBoard[55] = white
-
-		#set 54 and 45 to "black"
-		self.gameBoard[54] = black
-		self.gameBoard[45] = black
-
-
-
-
 # print game board
 def show_board(board):
 	for i in range(10):
@@ -68,41 +45,91 @@ def find_moves(colour, board):
 	
 	return moves
 
-#alter the board based on a move made
+# alter the board based on a move made,
+# assumes "move" param is legal
 def update_board(colour, board, move):
-	new_board = list(board.gameBoard)
-
 	if colour == black:
 		opponent = white
 	else:
 		opponent = black
 
-	new_board[move] = colour
+	# Make the actual move (before flipping)
+	board.gameBoard[move] = colour
 
+	# Copy of move so we can reset it each loop
 	pos = move
 
+	# Flip pieces
 	for dir in adjacents:
 		pos = move
 
 		# There is at least one opponent piece this direction
-		if new_board[pos + dir] == opponent:
+		if board.gameBoard[pos + dir] == opponent:
 			# Move in that direction once (pseudo do-while loop)
 			pos = pos + dir
 
 			# Keep going while we still see opponent pieces
-			while new_board[pos] == opponent:
+			while board.gameBoard[pos] == opponent:
 				pos = pos + dir
 
 			# We hit another one of our pieces, this direction requires flipping
-			if new_board[pos] == colour:
+			if board.gameBoard[pos] == colour:
 
 				# Go back down the line in reverse and flip opponent pices
-				while new_board[pos - dir] == opponent:
+				while board.gameBoard[pos - dir] == opponent:
+					if(colour == black):
+						board.white_pieces += 1
+					else:
+						board.black_pieces += 1
 					pos = pos - dir
-					new_board[pos] = colour
+					board.gameBoard[pos] = colour
 	
-	return new_board
+	return board.gameBoard
 
+class OthelloGame:
+	gameBoard = [empty] * 100
+	black_pieces = 30
+	white_pieces = 30
+
+	def __init__(self):
+		#init method
+		
+		#set border pieces to "border"
+		for i in range(100):
+			if i < 10 or i > 89 or i % 10 == 0 or i % 10 == 9:
+				self.gameBoard[i] = border
+		#set 44 and 55 to "white"
+		self.gameBoard[44] = white
+		self.gameBoard[55] = white
+
+		#set 54 and 45 to "black"
+		self.gameBoard[54] = black
+		self.gameBoard[45] = black
+
+	def play_game(self):
+		over = False
+		active = black
+		inactive = white
+		while not over:
+			legal_moves = find_moves(active, self)
+			if len(legal_moves) == 0 and len(find_moves(inactive, self)) == 0:
+				over = True
+				continue
+			if len(legal_moves) == 0:
+				print("No legal moves for " + active + ", skipping their turn.")
+				temp = active
+				active = inactive
+				inactive = temp
+			show_board(self)
+			print("Choose a move from " + legal_moves)
+
+			move = chooseMove() #Need to implement, Should have option for AI / Player
+
+			update_board(active, self, move)
+
+			temp = active
+			active = inactive
+			inactive = temp
 
 
 # main program
@@ -112,7 +139,7 @@ def main():
 
 	print(find_moves(black, game_main))
 
-	game_main.gameBoard = update_board(black, game_main, 34)
+	update_board(black, game_main, 34)
 	show_board(game_main)
 
 main()
