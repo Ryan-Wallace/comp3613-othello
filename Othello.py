@@ -3,6 +3,7 @@ empty = '⋅'
 black = 'B'
 white = 'W'
 border = '□'
+adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 
 class OthelloGame:
 	gameBoard = [empty] * 100
@@ -25,7 +26,7 @@ class OthelloGame:
 		self.gameBoard[45] = black
 
 
-		return
+
 
 # print game board
 def show_board(board):
@@ -37,7 +38,6 @@ def show_board(board):
 # find all possible moves
 def find_moves(colour, board):
 	moves = []
-	adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 
 	if colour == black:
 		opponent = white
@@ -68,10 +68,40 @@ def find_moves(colour, board):
 	
 	return moves
 
+#alter the board based on a move made
+def update_board(colour, board, move):
+	new_board = list(board.gameBoard)
 
+	if colour == black:
+		opponent = white
+	else:
+		opponent = black
 
+	new_board[move] = colour
 
+	pos = move
 
+	for dir in adjacents:
+		pos = move
+
+		# There is at least one opponent piece this direction
+		if new_board[pos + dir] == opponent:
+			# Move in that direction once (pseudo do-while loop)
+			pos = pos + dir
+
+			# Keep going while we still see opponent pieces
+			while new_board[pos] == opponent:
+				pos = pos + dir
+
+			# We hit another one of our pieces, this direction requires flipping
+			if new_board[pos] == colour:
+
+				# Go back down the line in reverse and flip opponent pices
+				while new_board[pos - dir] == opponent:
+					pos = pos - dir
+					new_board[pos] = colour
+	
+	return new_board
 
 
 
@@ -79,3 +109,10 @@ def find_moves(colour, board):
 def main():
 	game_main = OthelloGame()
 	show_board(game_main)
+
+	print(find_moves(black, game_main))
+
+	game_main.gameBoard = update_board(black, game_main, 34)
+	show_board(game_main)
+
+main()
