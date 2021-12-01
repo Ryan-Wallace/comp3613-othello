@@ -1,9 +1,13 @@
 # Logan VanOostrum, Ryan Wallace, Ben McNutt
+
+from random import choice
+
 empty = '⋅'
 black = 'B'
 white = 'W'
 border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
+ai = ''
 
 # print game board
 def show_board(board):
@@ -86,25 +90,40 @@ def update_board(colour, board, move):
 	
 	return board.gameBoard
 
+def choose_move(colour):
+	# ai move
+	if colour == ai:
+		# implement heuristic
+		pass # temporarily prevent syntax error for else statement
+		
+	# player move
+	else:
+		move = input(">> ")
+	return move
+
 class OthelloGame:
 	gameBoard = [empty] * 100
 	black_pieces = 30
 	white_pieces = 30
 
 	def __init__(self):
-		#init method
+		# init method
 		
-		#set border pieces to "border"
+		# set border pieces to "border"
 		for i in range(100):
 			if i < 10 or i > 89 or i % 10 == 0 or i % 10 == 9:
 				self.gameBoard[i] = border
-		#set 44 and 55 to "white"
+		# set 44 and 55 to "white"
 		self.gameBoard[44] = white
 		self.gameBoard[55] = white
 
-		#set 54 and 45 to "black"
+		# set 54 and 45 to "black"
 		self.gameBoard[54] = black
 		self.gameBoard[45] = black
+
+		# randomly select colour AI
+		colours = [black, white]
+		ai = choice(colours)
 
 	def play_game(self):
 		over = False
@@ -121,9 +140,11 @@ class OthelloGame:
 				active = inactive
 				inactive = temp
 			show_board(self)
-			print("Choose a move from " + legal_moves)
+			print(active + "'s turn. Choose a move from " + legal_moves)
 
-			move = chooseMove() #Need to implement, Should have option for AI / Player
+			move = choose_move(active) # has option for AI / Player
+
+			print(active + " chose " + move + ".")
 
 			update_board(active, self, move)
 
