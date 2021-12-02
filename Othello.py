@@ -210,7 +210,7 @@ class OthelloGame:
 			active = inactive
 			inactive = temp
 
-		if count_pieces(white,self.gameBoard) > count_pieces(black,self.gameBoard):
+		if count_pieces(self.gameBoard, white) > count_pieces(self.gameBoard, black):
 			winner = white
 		else:
 			winner = black
