@@ -9,7 +9,7 @@ border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 weights = [0 for i in range(100)]
 ai = ''
-heuristic = "greedy"
+heuristic = "weighted"
 
 for i in range(100):
 	if i in [11, 81, 18, 88]:
@@ -39,8 +39,8 @@ def find_moves(colour, board):
 	else:
 		opponent = black
 	
-	for i in range(8):
-		for j in range(8):
+	for i in range(1, 9):
+		for j in range(1, 9):
 			tile = int(str(i) + str(j))
 
 			# check if current players piece is in tile
@@ -55,12 +55,10 @@ def find_moves(colour, board):
 
 						while board.gameBoard[next + pos] == opponent:
 							next += pos
-					
 						# make sure loop didnt reach the border
 						if board.gameBoard[next + pos] == empty:
 							if (next + pos) not in moves:
 								moves += [next + pos]
-	
 	return moves
 
 # alter the board based on a move made,
@@ -112,7 +110,7 @@ def count_pieces(board_array, colour):
 
 def choose_move(colour, moves, board_array):
 	# ai move
-	if colour == ai:
+	if colour == ai or colour != ai:
 		if(heuristic == "greedy"):
 			pieces = 0
 			for move in moves:
@@ -120,6 +118,21 @@ def choose_move(colour, moves, board_array):
 				if count_pieces(future_board, colour) > pieces:
 					chosen_move = move
 					pieces = count_pieces(future_board, colour)
+
+		if(heuristic == "weighted"):
+			weight = -100
+			flipped = []
+			for move in moves:
+				future_board = update_board(colour, board_array, move)
+				for i in range(100):
+					if future_board[i] != board_array[i]:
+						flipped += [i]
+				for pos in flipped:
+					weight += weights[pos]
+				if weights[move] > weight:
+					chosen_move = move
+					weight = weights[move]
+
 	# player move
 	else:
 		chosen_move = int(input(">> "))
