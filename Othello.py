@@ -135,7 +135,22 @@ def choose_move(colour, moves, board_array):
 
 	# player move
 	else:
-		chosen_move = int(input(">> "))
+		while(1):
+
+			try:
+				chosen_move = int(input(">> "))
+
+				if chosen_move not in moves:
+					print("Invalid move, please try again.")
+				
+				else:
+					break
+
+			except ValueError:
+				print("Improper move format, expected a double digit int.")
+
+			
+
 	return chosen_move
 
 class OthelloGame:
@@ -208,11 +223,12 @@ class OthelloGame:
 			active = inactive
 			inactive = temp
 
-		if count_pieces(white,self.gameBoard) > count_pieces(black,self.gameBoard):
+		if count_pieces(self.gameBoard, white) > count_pieces(self.gameBoard, black):
 			winner = white
 		else:
 			winner = black
 		print("The game is over, " + winner + " wins!")
+		show_board(self.gameBoard)
 		
 
 
