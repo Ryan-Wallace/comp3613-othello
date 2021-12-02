@@ -155,6 +155,7 @@ def fl_weighted_h(colour, board_array, moves):
 	
 	return chosen_move
 
+# mobility heuristic (limit opponents moves next turn)
 def mobility(colour, moves, board_array):
 	cost = 100
 	for move in moves:
