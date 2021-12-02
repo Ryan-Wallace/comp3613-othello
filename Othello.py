@@ -162,22 +162,22 @@ class OthelloGame:
 		global ai
 		
 		# set border pieces to respective coordinates
-		for i in range(8):
-			self.gameBoard[i + 1] = str(i + 1)
+		for i in range(1, 9):
+			self.gameBoard[i] = str(i)
 
-		for i in range(8):
-			self.gameBoard[(i + 1) * 10] = str(i + 1)
+		for i in range(1, 9):
+			self.gameBoard[i * 10] = str(i)
 
 		#add border on corners
 		for i in [0, 9, 90, 99]:
 			self.gameBoard[i] = border
 
 		#add border on sides
-		for i in range(8):
-			self.gameBoard[i + 91] = border
+		for i in range(91, 99):
+			self.gameBoard[i] = border
 
-		for i in range(8):
-			self.gameBoard[((i + 1) * 10) + 9] = border
+		for i in range(1, 9):
+			self.gameBoard[(i * 10) + 9] = border
 		
 		# set 44 and 55 to "white"
 		self.gameBoard[44] = white
