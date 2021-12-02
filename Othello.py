@@ -8,6 +8,7 @@ white = 'W'
 border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 ai = ''
+heuristic = "greedy"
 
 # print game board
 def show_board(board):
@@ -51,14 +52,16 @@ def find_moves(colour, board):
 
 # alter the board based on a move made,
 # assumes "move" param is legal
-def update_board(colour, board, move):
+def update_board(colour, board_array, move):
 	if colour == black:
 		opponent = white
 	else:
 		opponent = black
 
+	new_board = list(board_array)
+
 	# Make the actual move (before flipping)
-	board.gameBoard[move] = colour
+	new_board[move] = colour
 
 	# Copy of move so we can reset it each loop
 	pos = move
@@ -68,43 +71,49 @@ def update_board(colour, board, move):
 		pos = move
 
 		# There is at least one opponent piece this direction
-		if board.gameBoard[pos + dir] == opponent:
+		if new_board[pos + dir] == opponent:
 			# Move in that direction once (pseudo do-while loop)
 			pos = pos + dir
 
 			# Keep going while we still see opponent pieces
-			while board.gameBoard[pos] == opponent:
+			while new_board[pos] == opponent:
 				pos = pos + dir
 
 			# We hit another one of our pieces, this direction requires flipping
-			if board.gameBoard[pos] == colour:
+			if new_board[pos] == colour:
 
 				# Go back down the line in reverse and flip opponent pices
-				while board.gameBoard[pos - dir] == opponent:
-					if(colour == black):
-						board.white_pieces += 1
-					else:
-						board.black_pieces += 1
+				while new_board[pos - dir] == opponent:
 					pos = pos - dir
-					board.gameBoard[pos] = colour
+					new_board[pos] = colour
 	
-	return board.gameBoard
+	return new_board
 
-def choose_move(colour, moves):
+def count_pieces(board_array, colour):
+	count = 0
+	for tile in board_array:
+		if tile == colour:
+			count += 1
+
+	return count
+
+def choose_move(colour, moves, board_array):
 	# ai move
 	if colour == ai:
-		# implement heuristic
-		pass # temporarily prevent syntax error for else statement
-		
+		if(heuristic == "greedy"):
+			pieces = 0
+			for move in moves:
+				future_board = update_board(colour, board_array, move)
+				if count_pieces(future_board, colour) > pieces:
+					chosen_move = move
+					pieces = count_pieces(future_board, colour)
 	# player move
 	else:
-		move = int(input(">> "))
-	return move
+		chosen_move = int(input(">> "))
+	return chosen_move
 
 class OthelloGame:
 	gameBoard = [empty] * 100
-	black_pieces = 30
-	white_pieces = 30
 
 	def __init__(self):
 		# init method
@@ -140,7 +149,7 @@ class OthelloGame:
 			legal_moves = find_moves(active, self)
 			if len(legal_moves) == 0 and len(find_moves(inactive, self)) == 0:
 				over = True
-				continue
+				break
 			if len(legal_moves) == 0:
 				print("No legal moves for " + active + ", skipping their turn.")
 				temp = active
@@ -149,15 +158,22 @@ class OthelloGame:
 			show_board(self)
 			print(active + "'s turn. Choose a move from " + str(legal_moves))
 
-			move = choose_move(active, legal_moves) # has option for AI / Player
+			move = choose_move(active, legal_moves, self.gameBoard) # has option for AI / Player
 
 			print(active + " chose " + str(move) + ".")
 
-			update_board(active, self, move)
+			self.gameBoard = update_board(active, self.gameBoard, move)
 
 			temp = active
 			active = inactive
 			inactive = temp
+
+		if count_pieces(active,self.gameBoard) > count_pieces(inactive,self.gameBoard):
+			winner = active
+		else:
+			winner = inactive
+		print("The game is over, " + winner + " wins!")
+		
 
 
 # main program
