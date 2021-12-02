@@ -9,7 +9,7 @@ border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 weights = [0 for i in range(100)]
 ai = ''
-heuristic = "weighted"
+heuristic = "mobility"
 
 for i in range(100):
 	if i in [11, 81, 18, 88]:
@@ -44,19 +44,19 @@ def find_moves(colour, board):
 			tile = int(str(i) + str(j))
 
 			# check if current players piece is in tile
-			if board.gameBoard[tile] == colour:
+			if board[tile] == colour:
 
 				# check each direction for adjacent opponent tiles
 				for pos in adjacents:
 
 					# if opponent in adjacent tile, check next tiles in that direction
-					if board.gameBoard[tile + pos] == opponent:
+					if board[tile + pos] == opponent:
 						next = tile + pos
 
-						while board.gameBoard[next + pos] == opponent:
+						while board[next + pos] == opponent:
 							next += pos
 						# make sure loop didnt reach the border
-						if board.gameBoard[next + pos] == empty:
+						if board[next + pos] == empty:
 							if (next + pos) not in moves:
 								moves += [next + pos]
 	return moves
@@ -108,6 +108,68 @@ def count_pieces(board_array, colour):
 
 	return count
 
+# weighted heuristic
+def weighted_h(colour, board_array, moves):
+	chosen_move = [0, -100]
+	flipped = []
+	for move in moves:
+		weight = 0
+		future_board = update_board(colour, board_array, move)
+		for i in range(100):
+			if future_board[i] != board_array[i]:
+				flipped += [i]
+		for pos in flipped:
+			weight += weights[pos]
+		weight += weights[move]
+		if weight > chosen_move[1]:
+			chosen_move[0] = move
+			chosen_move[1] = weight
+	
+	return chosen_move
+
+# forward-looking weighted heuristic
+def fl_weighted_h(colour, board_array, moves):
+	weight_last = -100
+	flipped = []
+	for move in moves:
+		weight = 0
+		future_board = update_board(colour, board_array, move)
+		for i in range(100):
+			if future_board[i] != board_array[i]:
+				flipped += [i]
+		for pos in flipped:
+			weight += weights[pos]
+		weight += weights[move]
+
+		# look at opponents next moves
+		if colour == black:
+			opp = white
+		else:
+			opp = black
+			
+		temp = weighted_h(opp, board_array, find_moves(opp, future_board))
+
+		if (weight - temp[1]) > weight_last:
+			chosen_move = move
+			weight_last = weight - temp[1]
+	
+	return chosen_move
+
+# mobility heuristic (limit opponents moves next turn)
+def mobility(colour, moves, board_array):
+	cost = 100
+	for move in moves:
+		future_board = update_board(colour, board_array, move)
+		if colour == black:
+			opp = white
+		else:
+			opp = black
+		if len(find_moves(opp, future_board)) < cost:
+			chosen_move = move
+			cost = len(find_moves(opp, future_board))
+
+	return chosen_move
+
 def choose_move(colour, moves, board_array):
 	# ai move
 	if colour == ai:
@@ -120,18 +182,14 @@ def choose_move(colour, moves, board_array):
 					pieces = count_pieces(future_board, colour)
 
 		if(heuristic == "weighted"):
-			weight = -100
-			flipped = []
-			for move in moves:
-				future_board = update_board(colour, board_array, move)
-				for i in range(100):
-					if future_board[i] != board_array[i]:
-						flipped += [i]
-				for pos in flipped:
-					weight += weights[pos]
-				if weights[move] > weight:
-					chosen_move = move
-					weight = weights[move]
+			temp = weighted_h(colour, board_array, moves)
+			chosen_move = temp[0]
+
+		if(heuristic == "fl_weighted"):
+			chosen_move = fl_weighted_h(colour, board_array, moves)
+		
+		if(heuristic == "mobility"):
+			chosen_move = mobility(colour, moves, board_array)
 
 	# player move
 	else:
@@ -201,8 +259,8 @@ class OthelloGame:
 		active = black
 		inactive = white
 		while not over:
-			legal_moves = find_moves(active, self)
-			if len(legal_moves) == 0 and len(find_moves(inactive, self)) == 0:
+			legal_moves = find_moves(active, self.gameBoard)
+			if len(legal_moves) == 0 and len(find_moves(inactive, self.gameBoard)) == 0:
 				over = True
 				break
 			if len(legal_moves) == 0:
