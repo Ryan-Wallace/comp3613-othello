@@ -210,6 +210,7 @@ class OthelloGame:
 				temp = active
 				active = inactive
 				inactive = temp
+				continue
 			show_board(self.gameBoard)
 			print(active + "'s turn. Choose a move from " + str(legal_moves))
 
