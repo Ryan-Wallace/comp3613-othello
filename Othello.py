@@ -229,6 +229,8 @@ class OthelloGame:
 		else:
 			winner = black
 		print("The game is over, " + winner + " wins!")
+		print("White: " + str(count_pieces(self.gameBoard, white)))
+		print("Black: " + str(count_pieces(self.gameBoard, black)))
 		show_board(self.gameBoard)
 		
 
