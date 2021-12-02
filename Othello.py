@@ -172,7 +172,7 @@ def mobility(colour, moves, board_array):
 
 def choose_move(colour, moves, board_array):
 	# ai move
-	if colour == ai or colour != ai:
+	if colour == ai:
 		if(heuristic == "greedy"):
 			pieces = 0
 			for move in moves:
