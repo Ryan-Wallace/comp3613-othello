@@ -120,18 +120,20 @@ def choose_move(colour, moves, board_array):
 					pieces = count_pieces(future_board, colour)
 
 		if(heuristic == "weighted"):
-			weight = -100
+			weight_last = -100
 			flipped = []
 			for move in moves:
+				weight = 0
 				future_board = update_board(colour, board_array, move)
 				for i in range(100):
 					if future_board[i] != board_array[i]:
 						flipped += [i]
 				for pos in flipped:
 					weight += weights[pos]
-				if weights[move] > weight:
+				weight += weights[move]
+				if weight > weight_last:
 					chosen_move = move
-					weight = weights[move]
+					weight_last = weight
 
 	# player move
 	else:
