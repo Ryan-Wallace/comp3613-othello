@@ -108,6 +108,24 @@ def count_pieces(board_array, colour):
 
 	return count
 
+def weighted_h(colour, board_array, moves):
+	weight_last = -100
+	flipped = []
+	for move in moves:
+		weight = 0
+		future_board = update_board(colour, board_array, move)
+		for i in range(100):
+			if future_board[i] != board_array[i]:
+				flipped += [i]
+		for pos in flipped:
+			weight += weights[pos]
+			weight += weights[move]
+			if weight > weight_last:
+				chosen_move = move
+				weight_last = weight
+	
+	return chosen_move
+
 def choose_move(colour, moves, board_array):
 	# ai move
 	if colour == ai:
@@ -120,20 +138,7 @@ def choose_move(colour, moves, board_array):
 					pieces = count_pieces(future_board, colour)
 
 		if(heuristic == "weighted"):
-			weight_last = -100
-			flipped = []
-			for move in moves:
-				weight = 0
-				future_board = update_board(colour, board_array, move)
-				for i in range(100):
-					if future_board[i] != board_array[i]:
-						flipped += [i]
-				for pos in flipped:
-					weight += weights[pos]
-				weight += weights[move]
-				if weight > weight_last:
-					chosen_move = move
-					weight_last = weight
+			chosen_move = weighted_h(colour, board_array, moves)
 
 	# player move
 	else:
