@@ -7,6 +7,7 @@ black = 'B'
 white = 'W'
 border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
+weights = []
 ai = ''
 heuristic = "greedy"
 
@@ -14,7 +15,7 @@ heuristic = "greedy"
 def show_board(board):
 	for i in range(10):
 		for j in range(10):
-			print(board.gameBoard[(i * 10) + j] + ' ', end='')
+			print(board.gameBoard[i + (j * 10)] + ' ', end='')
 		print('')
 	
 # find all possible moves
