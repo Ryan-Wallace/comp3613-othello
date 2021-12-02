@@ -7,15 +7,27 @@ black = 'B'
 white = 'W'
 border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
-weights = []
+weights = [0 for i in range(100)]
 ai = ''
 heuristic = "greedy"
+
+for i in range(100):
+	if i in [11, 81, 18, 88]:
+		weights[i] = 10
+	if i in [21, 12, 71, 82, 28, 17, 78, 87]:
+		weights[i] = -5
+	if i in [22, 72, 27, 77]:
+		weights[i] = -10
+	if i in [13, 16, 31, 33, 36, 38, 61, 63, 66, 68, 83, 86]:
+		weights[i] = 6
+	if i in [14, 15, 34, 35, 41, 43, 44, 45, 46, 48, 51, 53, 54, 55, 56, 58, 64, 65, 84, 85]:
+		weights[i] = 3
 
 # print game board
 def show_board(board):
 	for i in range(10):
 		for j in range(10):
-			print(board.gameBoard[i + (j * 10)] + ' ', end='')
+			print(str(board[i + (j * 10)]) + ' ', end='')
 		print('')
 	
 # find all possible moves
@@ -156,7 +168,7 @@ class OthelloGame:
 				temp = active
 				active = inactive
 				inactive = temp
-			show_board(self)
+			show_board(self.gameBoard)
 			print(active + "'s turn. Choose a move from " + str(legal_moves))
 
 			move = choose_move(active, legal_moves, self.gameBoard) # has option for AI / Player
