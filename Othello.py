@@ -121,10 +121,24 @@ class OthelloGame:
 
 		global ai
 		
-		# set border pieces to "border"
-		for i in range(100):
-			if i < 10 or i > 89 or i % 10 == 0 or i % 10 == 9:
-				self.gameBoard[i] = border
+		# set border pieces to respective coordinates
+		for i in range(8):
+			self.gameBoard[i + 1] = str(i + 1)
+
+		for i in range(8):
+			self.gameBoard[(i + 1) * 10] = str(i + 1)
+
+		#add border on corners
+		for i in [0, 9, 90, 99]:
+			self.gameBoard[i] = border
+
+		#add border on sides
+		for i in range(8):
+			self.gameBoard[i + 91] = border
+
+		for i in range(8):
+			self.gameBoard[((i + 1) * 10) + 9] = border
+		
 		# set 44 and 55 to "white"
 		self.gameBoard[44] = white
 		self.gameBoard[55] = white
@@ -169,10 +183,10 @@ class OthelloGame:
 			active = inactive
 			inactive = temp
 
-		if count_pieces(active,self.gameBoard) > count_pieces(inactive,self.gameBoard):
-			winner = active
+		if count_pieces(white,self.gameBoard) > count_pieces(black,self.gameBoard):
+			winner = white
 		else:
-			winner = inactive
+			winner = black
 		print("The game is over, " + winner + " wins!")
 		
 
