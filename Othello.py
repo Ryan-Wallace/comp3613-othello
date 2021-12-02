@@ -132,7 +132,7 @@ def choose_move(colour, moves, board_array):
 				
 				else:
 					break
-				
+
 			except ValueError:
 				print("Improper move format, expected a double digit int.")
 
@@ -215,6 +215,7 @@ class OthelloGame:
 		else:
 			winner = black
 		print("The game is over, " + winner + " wins!")
+		show_board(self.gameBoard)
 		
 
 
