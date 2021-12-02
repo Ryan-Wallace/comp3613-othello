@@ -90,7 +90,7 @@ def update_board(colour, board, move):
 	
 	return board.gameBoard
 
-def choose_move(colour):
+def choose_move(colour, moves):
 	# ai move
 	if colour == ai:
 		# implement heuristic
@@ -98,7 +98,7 @@ def choose_move(colour):
 		
 	# player move
 	else:
-		move = input(">> ")
+		move = int(input(">> "))
 	return move
 
 class OthelloGame:
@@ -108,6 +108,8 @@ class OthelloGame:
 
 	def __init__(self):
 		# init method
+
+		global ai
 		
 		# set border pieces to "border"
 		for i in range(100):
@@ -124,6 +126,11 @@ class OthelloGame:
 		# randomly select colour AI
 		colours = [black, white]
 		ai = choice(colours)
+		if ai == black:
+			you = white
+		else:
+			you = black
+		print("You are " + you + ", B's turn is first")
 
 	def play_game(self):
 		over = False
@@ -140,11 +147,11 @@ class OthelloGame:
 				active = inactive
 				inactive = temp
 			show_board(self)
-			print(active + "'s turn. Choose a move from " + legal_moves)
+			print(active + "'s turn. Choose a move from " + str(legal_moves))
 
-			move = choose_move(active) # has option for AI / Player
+			move = choose_move(active, legal_moves) # has option for AI / Player
 
-			print(active + " chose " + move + ".")
+			print(active + " chose " + str(move) + ".")
 
 			update_board(active, self, move)
 
@@ -156,11 +163,7 @@ class OthelloGame:
 # main program
 def main():
 	game_main = OthelloGame()
-	show_board(game_main)
-
-	print(find_moves(black, game_main))
-
-	update_board(black, game_main, 34)
-	show_board(game_main)
+	
+	game_main.play_game()
 
 main()
