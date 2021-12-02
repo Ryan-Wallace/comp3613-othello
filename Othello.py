@@ -9,7 +9,7 @@ border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 weights = [0 for i in range(100)]
 ai = ''
-heuristic = "fl_weighted"
+heuristic = "mobility"
 
 for i in range(100):
 	if i in [11, 81, 18, 88]:
@@ -155,9 +155,23 @@ def fl_weighted_h(colour, board_array, moves):
 	
 	return chosen_move
 
+def mobility(colour, moves, board_array):
+	cost = 100
+	for move in moves:
+		future_board = update_board(colour, board_array, move)
+		if colour == black:
+			opp = white
+		else:
+			opp = black
+		if len(find_moves(opp, future_board)) < cost:
+			chosen_move = move
+			cost = len(find_moves(opp, future_board))
+
+	return chosen_move
+
 def choose_move(colour, moves, board_array):
 	# ai move
-	if colour == ai:
+	if colour == ai or colour != ai:
 		if(heuristic == "greedy"):
 			pieces = 0
 			for move in moves:
@@ -172,6 +186,9 @@ def choose_move(colour, moves, board_array):
 
 		if(heuristic == "fl_weighted"):
 			chosen_move = fl_weighted_h(colour, board_array, moves)
+		
+		if(heuristic == "mobility"):
+			chosen_move = mobility(colour, moves, board_array)
 
 	# player move
 	else:
