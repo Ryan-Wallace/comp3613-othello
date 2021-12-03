@@ -9,7 +9,7 @@ border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 weights = [0 for i in range(100)]
 ai = ''
-heuristic = "mobility"
+heuristic = "fl_weighted"
 
 for i in range(100):
 	if i in [11, 81, 18, 88]:
@@ -109,7 +109,7 @@ def count_pieces(board_array, colour):
 	return count
 
 # weighted heuristic
-def weighted_h(colour, board_array, moves):
+def weighted(colour, board_array, moves):
 	chosen_move = [0, -100]
 	flipped = []
 	for move in moves:
@@ -128,7 +128,7 @@ def weighted_h(colour, board_array, moves):
 	return chosen_move
 
 # forward-looking weighted heuristic
-def fl_weighted_h(colour, board_array, moves):
+def fl_weighted(colour, board_array, moves):
 	weight_last = -100
 	flipped = []
 	for move in moves:
@@ -147,7 +147,7 @@ def fl_weighted_h(colour, board_array, moves):
 		else:
 			opp = black
 			
-		temp = weighted_h(opp, board_array, find_moves(opp, future_board))
+		temp = weighted(opp, board_array, find_moves(opp, future_board))
 
 		if (weight - temp[1]) > weight_last:
 			chosen_move = move
@@ -182,11 +182,11 @@ def choose_move(colour, moves, board_array):
 					pieces = count_pieces(future_board, colour)
 
 		if(heuristic == "weighted"):
-			temp = weighted_h(colour, board_array, moves)
+			temp = weighted(colour, board_array, moves)
 			chosen_move = temp[0]
 
 		if(heuristic == "fl_weighted"):
-			chosen_move = fl_weighted_h(colour, board_array, moves)
+			chosen_move = fl_weighted(colour, board_array, moves)
 		
 		if(heuristic == "mobility"):
 			chosen_move = mobility(colour, moves, board_array)
