@@ -9,7 +9,7 @@ border = '□'
 adjacents = [-11, -10, -9, -1, +1, +9, +10, +11]
 weights = [0 for i in range(100)]
 ai = ''
-heuristic = "mobility"
+heuristic = "fl_weighted"
 
 for i in range(100):
 	if i in [11, 81, 18, 88]:
